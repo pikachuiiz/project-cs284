@@ -1,0 +1,81 @@
+package com.example.jt.carlo;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+public class SexTypeActivity extends AppCompatActivity {
+
+    ImageButton sexBtn;
+    ImageButton okBtn;
+    String sexType = "male";
+    RelativeLayout sexTypePageLayout;
+    TextView sexTextView;
+    ImageView sexPic;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sex_type);
+
+        sexBtn = (ImageButton) findViewById(R.id.sexBtn);
+        sexTypePageLayout = (RelativeLayout) findViewById(R.id.sexTypePageLayout);
+        okBtn = (ImageButton) findViewById(R.id.okBtn);
+        sexTextView = (TextView) findViewById(R.id.sexTextView);
+        sexPic = (ImageView) findViewById(R.id.sexPic);
+
+        sexBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (sexType.equals("male")) {
+                    sexBtn.setBackgroundResource(R.drawable.switch1);
+                    sexTypePageLayout.setBackgroundResource(R.color.pink);
+                    sexPic.setBackgroundResource(R.drawable.female);
+                    sexType = "female";
+                    sexTextView.setText("FEMALE");
+                } else {
+                    sexBtn.setBackgroundResource(R.drawable.switch2);
+                    sexTypePageLayout.setBackgroundResource(R.color.skyblue);
+                    sexPic.setBackgroundResource(R.drawable.male);
+                    sexType = "male";
+                    sexTextView.setText("MALE");
+                }
+            }
+        });
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences sp = getSharedPreferences("PREF_NAME", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("sexType", sexType);
+                editor.commit();
+
+                Intent i = new Intent(SexTypeActivity.this , InputDataActivity.class);
+                i.putExtra("sexType" , sexType);
+                startActivity(i);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
+}

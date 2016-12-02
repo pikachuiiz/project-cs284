@@ -1,0 +1,34 @@
+package com.example.jt.carlo;
+
+import android.content.Intent;
+import android.os.Handler;
+import android.os.StrictMode;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class SplashActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        //int secondsDelayed = 1;
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                nextPage();
+            }
+        }, 2000);
+
+    }
+
+    private void nextPage() {
+        Intent i = new Intent(SplashActivity.this, SexTypeActivity.class);
+        startActivity(i);
+        finish();
+
+    }
+}

@@ -1,0 +1,102 @@
+package com.example.jt.carlo;
+
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+
+class MyDbHelper extends SQLiteOpenHelper {
+    private static final String DB_NAME = "CAL";
+    private static final int DB_VERSION = 4;
+    public static final String TABLE_NAME = "Menu";
+    public static final String COL_NAME = "name";
+    public static final String COL_CAL = "cal";
+    public static final String TABLE_NAME1 = "Choose";
+
+    public MyDbHelper(Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + TABLE_NAME +" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_NAME + " TEXT, " + COL_CAL + " INTEGER);");
+        db.execSQL("CREATE TABLE " + TABLE_NAME1 +" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_NAME + " TEXT, " + COL_CAL + " INTEGER);");
+
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('โกยซีหมี่', 550);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวกระเพราหมู', 450);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('เส้นจันทน์ผัดปู', 575);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('โจ๊กหมู', 175);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('เกี๊ยวกรอบราดหน้ากุ้ง', 635);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวมันไก่', 596);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวมันไก่ทอด', 695);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวหน้าเป็ด', 495);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ต้มยำกุ้ง', 65);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('บะหมี่เกี๊ยวหมูแดง', 305);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดเผ็ดปลาทอดกรอบ', 290);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวผัดหมูใส่ไข่', 557);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ซุปข้าวโพด', 140);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวหมูแดง', 541);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวหมูทอด่', 416);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวหมูทอดกระเทียม', 525);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวหมกไก่', 534);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ข้าวเหนียวหมูทอด', 440);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('โจ๊กหมู', 160);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ต้มยำกุ้ง', 65);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ต้มจืดเลือดหมู', 120);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('บะหมี่กรอบราดหน้า', 515);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('บะหมี่น้ำเกี๊ยวหมูแดง', 305);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดซีอิ๋วเส้นใหญ่หมูใส่ไข่', 679);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดไทยกุ้งสด', 486);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดผักบุ้งไฟแดง', 210);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดผักกระเฉดน้ำมันหอย', 185);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดเผ็ดปลาดุก', 200);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดเผ็ดปลาทอดกรอบ', 290);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดมักกะโรนีหมู', 514);");
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (" + COL_NAME + ", " + COL_CAL
+                +  ") VALUES ('ผัดเผ็ดปลาทอดกรอบ', 290);");
+
+    }
+
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
+    }
+
+    public void dropTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME1);
+        onCreate(db);
+    }
+}
+

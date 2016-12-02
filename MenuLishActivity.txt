@@ -1,0 +1,72 @@
+package com.example.jt.carlo;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+public class MenuListActivity extends AppCompatActivity {
+    ListView menuListView;
+    SQLiteDatabase mDb;
+    MyDbHelper mHelper;
+    Cursor mCursor;
+    double sumCal;
+    MenuListAdapter menuListAdapter;
+    String sexType;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu_list);
+        menuListView = (ListView) findViewById(R.id.menuListView);
+
+        sumCal = getIntent().getExtras().getDouble("sumCal");
+        sexType = getIntent().getExtras().getString("sexType");
+
+        mHelper = new MyDbHelper(this);
+        mDb = mHelper.getWritableDatabase();
+        mCursor = mDb.rawQuery("SELECT " + MyDbHelper.COL_NAME + ", "  + MyDbHelper.COL_CAL
+                 + " FROM " + MyDbHelper.TABLE_NAME, null);
+
+        ArrayList<String> dirArray = new ArrayList<String>();
+        ArrayList<String> dirArrayName = new ArrayList<String>();
+        ArrayList<Double> dirArrayCal = new ArrayList<Double>();
+
+        mCursor.moveToFirst();
+
+        while ( !mCursor.isAfterLast() ){
+            dirArray.add(mCursor.getString(mCursor.getColumnIndex(MyDbHelper.COL_NAME)) + "\n"
+                    + "แคลลอรี่ : " + mCursor.getString(mCursor.getColumnIndex(MyDbHelper.COL_CAL)) + "\t\t");
+            dirArrayName.add(mCursor.getString(mCursor.getColumnIndex(MyDbHelper.COL_NAME)));
+            dirArrayCal.add(mCursor.getDouble(mCursor.getColumnIndex(MyDbHelper.COL_CAL)));
+            mCursor.moveToNext();
+        }
+
+
+        menuListAdapter = new MenuListAdapter(getBaseContext() , dirArray , dirArrayName , dirArrayCal , sumCal);
+        menuListView.setAdapter(menuListAdapter);
+
+    }
+
+    public void onPause() {
+        super.onPause();
+        mHelper.close();
+        mDb.close();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(MenuListActivity.this , MenuChooseActivity.class);
+        i.putExtra("sumCal" , sumCal);
+        i.putExtra("sexType" , sexType);
+        startActivity(i);
+    }
+}

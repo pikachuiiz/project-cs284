@@ -1,0 +1,116 @@
+package com.example.jt.carlo;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+public class MenuChooseActivity extends AppCompatActivity {
+
+    TextView calTextView;
+    ListView chooseListView;
+    ImageButton deleteButton , totalButton , addButton;
+    double sumCal;
+
+    SQLiteDatabase mDb;
+    MyDbHelper mHelper;
+    Cursor mCursor;
+    String sexType;
+    ArrayList<String> dirArray = new ArrayList<String>();
+    ArrayList<Integer> dirArrayId = new ArrayList<Integer>();
+
+    MenuChooseAdapter mAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu_choose);
+
+        sumCal = getIntent().getExtras().getDouble("sumCal");
+        sexType = getIntent().getExtras().getString("sexType");
+
+        calTextView = (TextView) findViewById(R.id.calTextView);
+        chooseListView = (ListView) findViewById(R.id.chooseListView);
+        deleteButton = (ImageButton) findViewById(R.id.deleteButton);
+        totalButton = (ImageButton) findViewById(R.id.totalButton);
+        addButton = (ImageButton) findViewById(R.id.addButton);
+
+        String sumCalString;
+        sumCalString = String.format("%.2f", sumCal);
+        calTextView.setText("แคลลอรี่ที่ควรได้รับต่อวัน : " + sumCalString);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDb.execSQL("delete from "+ MyDbHelper.TABLE_NAME1);
+                Intent i = new Intent(MenuChooseActivity.this , MenuChooseActivity.class);
+                i.putExtra("sumCal" , sumCal);
+                i.putExtra("sexType" , sexType);
+                startActivity(i);
+            }
+        });
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MenuChooseActivity.this , MenuListActivity.class);
+                i.putExtra("sumCal" , sumCal);
+                i.putExtra("sexType" , sexType);
+                startActivity(i);
+            }
+        });
+
+        totalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MenuChooseActivity.this , TotalActivity.class);
+                i.putExtra("sumCal" , sumCal);
+                i.putExtra("sexType" , sexType);
+                startActivity(i);
+            }
+        });
+
+        mHelper = new MyDbHelper(this);
+        mDb = mHelper.getWritableDatabase();
+        mCursor = mDb.rawQuery("SELECT " + "_id, " +  MyDbHelper.COL_NAME + ", "  + MyDbHelper.COL_CAL
+                + " FROM " + MyDbHelper.TABLE_NAME1, null);
+
+
+        mCursor.moveToFirst();
+
+        while ( !mCursor.isAfterLast() ){
+            dirArray.add(mCursor.getString(mCursor.getColumnIndex(MyDbHelper.COL_NAME)) + "\n"
+                    + "แคลลอรี่ : " + mCursor.getString(mCursor.getColumnIndex(MyDbHelper.COL_CAL)) + "\t\t");
+            dirArrayId.add(mCursor.getInt(mCursor.getColumnIndex("_id")));
+            mCursor.moveToNext();
+        }
+
+        mAdapter = new MenuChooseAdapter(getBaseContext() , dirArray , dirArrayId , sumCal);
+        chooseListView.setAdapter(mAdapter);
+
+    }
+
+    public void onPause() {
+        super.onPause();
+        mHelper.close();
+        mDb.close();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(MenuChooseActivity.this , InputDataActivity.class);
+        i.putExtra("sexType" , sexType);
+        startActivity(i);
+    }
+}

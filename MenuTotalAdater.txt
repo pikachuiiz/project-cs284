@@ -1,0 +1,80 @@
+package com.example.jt.carlo;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+
+
+public class MenuTotalAdapter extends BaseAdapter {
+
+    Context context;
+    ArrayList<String> dirArray;
+    ArrayList<String> dirArrayName;
+    ArrayList<Double> dirArrayCal;
+    ArrayList<Integer> dirArrayId;
+
+    TextView menuTextView;
+    LinearLayout menuLinearLayout;
+    ImageButton deleteButton;
+    double sumCal;
+    SQLiteDatabase mDb;
+    MyDbHelper mHelper;
+    Cursor mCursor;
+
+
+    public MenuTotalAdapter(Context context , ArrayList<String> dirArray , ArrayList<Integer> dirArrayId, double sumCal){
+        this.dirArray = dirArray;
+        this.dirArrayName = dirArrayName;
+        this.dirArrayCal = dirArrayCal;
+        this.sumCal = sumCal;
+        this.context = context;
+        this.dirArrayId = dirArrayId;
+    }
+
+    @Override
+    public int getCount() {
+        return dirArray.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+    @Override
+    public View getView(final int i, View view, ViewGroup viewGroup) {
+        LayoutInflater mInflater =
+                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        view = mInflater.inflate(R.layout.adapter_menu_total, viewGroup, false);
+
+        menuTextView = (TextView) view.findViewById(R.id.menuTextView);
+        menuLinearLayout = (LinearLayout) view.findViewById(R.id.menuLinearLayout);
+        deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
+
+        menuTextView.setText(dirArray.get(i));
+
+        mHelper = new MyDbHelper(context);
+        mDb = mHelper.getWritableDatabase();
+
+        final int j;
+        j = i;
+
+        return view;
+    }
+}

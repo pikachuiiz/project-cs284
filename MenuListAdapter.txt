@@ -1,0 +1,90 @@
+package com.example.jt.carlo;
+
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
+
+
+public class MenuListAdapter extends BaseAdapter {
+
+    Context context;
+    ArrayList<String> dirArray;
+    ArrayList<String> dirArrayName;
+    ArrayList<Double> dirArrayCal;
+
+    TextView menuTextView;
+    ImageButton addBtn;
+    double sumCal;
+    SQLiteDatabase mDb;
+    MyDbHelper mHelper;
+    Cursor mCursor;
+
+
+    public  MenuListAdapter(Context context , ArrayList<String> dirArray , ArrayList<String> dirArrayName ,ArrayList<Double> dirArrayCal
+    , double sumCal){
+        this.dirArray = dirArray;
+        this.dirArrayName = dirArrayName;
+        this.dirArrayCal = dirArrayCal;
+        this.sumCal = sumCal;
+        this.context = context;
+    }
+
+    @Override
+    public int getCount() {
+        return dirArray.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+    @Override
+    public View getView(final int i, View view, ViewGroup viewGroup) {
+        LayoutInflater mInflater =
+                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        view = mInflater.inflate(R.layout.adapter_menu_list, viewGroup, false);
+
+        menuTextView = (TextView) view.findViewById(R.id.menuTextView);
+        addBtn = (ImageButton) view.findViewById(R.id.addBtn);
+
+        menuTextView.setText(dirArray.get(i));
+
+        mHelper = new MyDbHelper(context);
+        mDb = mHelper.getWritableDatabase();
+
+        final int j;
+        j = i;
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDb.execSQL("INSERT INTO " + "Choose" + " (" + "name" + ", " + "cal"
+                        +  ") VALUES ('" + dirArrayName.get(j)+ "'," + dirArrayCal.get(j) + ");");
+
+                Intent intent = new Intent(view.getContext() , MenuChooseActivity.class);
+                intent.putExtra("sumCal" , sumCal);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        return view;
+    }
+}

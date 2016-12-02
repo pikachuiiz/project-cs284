@@ -1,0 +1,123 @@
+package com.example.jt.carlo;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
+public class TotalActivity extends AppCompatActivity {
+
+    TextView calTextView;
+    TextView totalTextView;
+    TextView resultTextView;
+    ListView chooseListView;
+    ImageButton okButton;
+    double sumCal;
+    double total = 0 ;
+
+    SQLiteDatabase mDb;
+    MyDbHelper mHelper;
+    Cursor mCursor;
+    String sexType;
+    ArrayList<String> dirArray = new ArrayList<String>();
+    ArrayList<Integer> dirArrayId = new ArrayList<Integer>();
+    ArrayList<Double> dirArrayCal = new ArrayList<Double>();
+
+    MenuTotalAdapter mAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_total);
+
+        sumCal = getIntent().getExtras().getDouble("sumCal");
+        sexType = getIntent().getExtras().getString("sexType");
+
+        calTextView = (TextView) findViewById(R.id.calTextView);
+        chooseListView = (ListView) findViewById(R.id.chooseListView);
+        totalTextView = (TextView) findViewById(R.id.totalTextView);
+        okButton = (ImageButton) findViewById(R.id.okBtn);
+        resultTextView = (TextView) findViewById(R.id.resultTextView);
+
+        mHelper = new MyDbHelper(this);
+        mDb = mHelper.getWritableDatabase();
+        mCursor = mDb.rawQuery("SELECT " + "_id, " +  MyDbHelper.COL_NAME + ", "  + MyDbHelper.COL_CAL
+                + " FROM " + MyDbHelper.TABLE_NAME1, null);
+
+
+        mCursor.moveToFirst();
+
+        while ( !mCursor.isAfterLast() ){
+            dirArray.add(mCursor.getString(mCursor.getColumnIndex(MyDbHelper.COL_NAME)) + "\n"
+                    + "แคลลอรี่ : " + mCursor.getString(mCursor.getColumnIndex(MyDbHelper.COL_CAL)) + "\t\t");
+            dirArrayId.add(mCursor.getInt(mCursor.getColumnIndex("_id")));
+            dirArrayCal.add(mCursor.getDouble(mCursor.getColumnIndex(MyDbHelper.COL_CAL)));
+            mCursor.moveToNext();
+        }
+
+        mAdapter = new MenuTotalAdapter(getBaseContext() , dirArray , dirArrayId , sumCal);
+        chooseListView.setAdapter(mAdapter);
+
+        String sumCalString;
+        sumCalString = String.format("%.2f", sumCal);
+        calTextView.setText("แคลลอรี่ที่ควรได้รับต่อวัน : " + sumCalString);
+
+        for(int i = 0  ; i < dirArrayCal.size() ; i++){
+            total += dirArrayCal.get(i);
+        }
+
+        totalTextView.setText("แคลลอรี่รวม : " + total);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(TotalActivity.this, MenuChooseActivity.class);
+                i.putExtra("sumCal", sumCal);
+                i.putExtra("sexType" , sexType);
+                startActivity(i);
+            }
+        });
+
+
+        double result = sumCal - total;
+        String resultString;
+        if(result > 0){
+            resultString = String.format("%.2f", result);
+            resultTextView.setText("รับประทาน 'ขาด' ไป : " + resultString);
+            resultTextView.setTextColor(getResources().getColor(R.color.red));
+        }else if(result == 0 ){
+            resultTextView.setText("รับประทาน 'พอดี'");
+            resultTextView.setTextColor(getResources().getColor(R.color.darkorange));
+        }else if(result < 0){
+            result = result*-1;
+            resultString = String.format("%.2f", result);
+            resultTextView.setText("รับประทาน 'เกิน' ไป : " + resultString);
+            resultTextView.setTextColor(getResources().getColor(R.color.darkolivegreen));
+        }
+
+    }
+
+    public void onPause() {
+        super.onPause();
+        mHelper.close();
+        mDb.close();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(TotalActivity.this , MenuChooseActivity.class);
+        i.putExtra("sumCal" , sumCal);
+        i.putExtra("sexType" , sexType);
+        startActivity(i);
+    }
+}
